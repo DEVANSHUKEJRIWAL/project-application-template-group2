@@ -1,6 +1,10 @@
+import config
 from typing import List
 import matplotlib.pyplot as plt
 import pandas as pd
+from datetime import datetime
+import random
+import os
 from data_loader import DataLoader
 from model import Issue
 
@@ -14,7 +18,7 @@ class IssueCreationTrendAnalysis:
     """
 
     def __init__(self):
-        pass
+        self.output_dir = config.get_parameter('output_dir')
 
     def run(self):
         issues: List[Issue] = DataLoader().get_issues()
@@ -95,8 +99,19 @@ class IssueCreationTrendAnalysis:
         print(f"Issue data range: {first_date} → {last_date}")
         print("-" * 40)
 
-
         plt.tight_layout()
+
+        save_choice = input("\nDo you want to save the chart? (y/n): ").strip().lower()
+        if save_choice == 'y':
+            os.makedirs(self.output_dir, exist_ok=True)
+            today_str = datetime.now().strftime("%Y%m%d")
+            rand_suffix = random.randint(1000, 9999)
+            file_year = year_filter if year_filter else "all_years"
+            filename = f"issue_analysis_{file_year}_{today_str}_{rand_suffix}.png"
+            filepath = os.path.join(self.output_dir, filename)
+            plt.savefig(filepath, dpi=300)
+            print(f"\nChart saved successfully as '{filepath}'")
+
         plt.show()
 
 
