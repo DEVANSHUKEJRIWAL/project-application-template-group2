@@ -1,3 +1,4 @@
 {
-    "ENPM611_PROJECT_DATA_PATH":"data/poetry_issues.json"
+    "ENPM611_PROJECT_DATA_PATH": "data/poetry_issues_all.json",
+    "output_dir": "output/charts"
 }
