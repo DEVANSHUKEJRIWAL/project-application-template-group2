@@ -1,10 +1,17 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
+from datetime import datetime
 from data_loader import DataLoader
+import config
 
-class IssueStatusAnalyzer:
+class ReopenedClosedAnalysis:
     def __init__(self):
-        pass
+        # Load output directory from config
+        self.output_dir = config.get_parameter("output_dir")
+
+        # Ensure output directory exists
+        os.makedirs(self.output_dir, exist_ok=True)
 
     def analyze(self):
         all_issues = DataLoader().get_issues()
@@ -62,10 +69,11 @@ class IssueStatusAnalyzer:
 
         save_choice = input("\nDo you want to save this chart as a PNG file? (y/n): ").strip().lower()
         if save_choice == 'y':
-            filename = input("Enter filename (without extension): ").strip() or "issue_status_chart"
-            file_path = f"{filename}.png"
+            timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+            filename = f"issue_status_chart_{timestamp}.png"
+            file_path = os.path.join(self.output_dir, filename)
             plt.savefig(file_path, dpi=300)
-            print(f"Chart saved as '{file_path}'.")
+            print(f"✅ Chart saved to: {file_path}")
         else:
             print("Chart not saved. Displaying instead...")
 
@@ -73,4 +81,4 @@ class IssueStatusAnalyzer:
 
 
 if __name__ == '__main__':
-    IssueStatusAnalyzer().analyze()
+    ReopenedClosedAnalysis().analyze()
